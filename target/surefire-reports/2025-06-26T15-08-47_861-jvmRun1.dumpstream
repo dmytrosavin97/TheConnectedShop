@@ -1,0 +1,7 @@
+# Created at 2025-06-26T15:08:49.516
+TestEngine with ID 'junit-jupiter' encountered a critical issue during test discovery:
+
+(1) [ERROR] @BeforeAll method 'void com.theconnectedshop.AddToCartTest.openHomePage()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).
+    Source: MethodSource [className = 'com.theconnectedshop.AddToCartTest', methodName = 'openHomePage', methodParameterTypes = '']
+            at com.theconnectedshop.AddToCartTest.openHomePage(SourceFile:0)
+

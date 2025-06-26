@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  
 import java.time.Duration;
  
-//@TestMethodOrder(MethodOrderer.DisplayName.class)          
+@TestMethodOrder(MethodOrderer.DisplayName.class)          
 
 public class AddToCartTest {
  
@@ -34,11 +34,11 @@ public class AddToCartTest {
 
         driver.manage().window().maximize();               // во весь экран
 
-        driver.manage().timeouts()
-
-              .implicitlyWait(Duration.ofSeconds(10));    
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));    
 
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        driver.get("https://theconnectedshop.com/"); // Открываем сайт один раз
 
     }
  
@@ -50,15 +50,13 @@ public class AddToCartTest {
 
     }
  
-    @BeforeEach
+        @BeforeAll
 
-    void openHomePage() {
+    static void openHomePage() {
 
         driver.get("https://theconnectedshop.com/");
 
     }
- 
-    
  
     @Test
 
@@ -90,35 +88,50 @@ public class AddToCartTest {
 
     void checkHeaderLogo() {
 
-        WebElement logo = driver.findElement(
-
-                By.cssSelector("img[alt='The Connected Shop Logo White']"));
+        WebElement logo = driver.findElement(By.cssSelector("img[alt='The Connected Shop Logo White']"));
 
         Assertions.assertTrue(logo.isDisplayed(), "Логотип не виден");
+
+    }
+
+    
+
+@Test
+
+    @DisplayName("03.Search check")
+
+    void searchClick() {
+WebElement searchClick = driver.findElement(By.cssSelector("a[data-action='toggle-search']"));
+
+searchClick.click();  
+}
+
+    void checkSearch() {
+WebElement searchInput = driver.findElement(By.name("q"));
+searchInput.sendKeys("smart door lock ");
+searchInput.submit();
+
 
     }
  
     @Test
 
-    @DisplayName("03. Карточка \"Smart Door Lock\" кликабельна")
+    @DisplayName("03. Карточка \"Smart Door Lock Slim\" кликабельна")
 
     void checkProductCard() {
 
-        WebElement productLink = driver.findElement(
-
-                By.cssSelector("h2.ProductItem__Title a"));
-
-        Assertions.assertEquals("Smart Door Lock",
-
-                productLink.getText(),
-
-                "Название товара отличается");
+        WebElement productLink = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@href='/products/smart-door-lock-slim' and text()='Smart Door Lock Slim']")));
+        Assertions.assertEquals("smart door lock slim",
+        
+               productLink.getText().toLowerCase(),
+        
+              "Название товара отличается");
  
         productLink.click();   // если не падает — ссылка рабочая
 
         Assertions.assertTrue(driver.getCurrentUrl()
 
-                .contains("/products/smart-door-lock"),
+                .contains("/products/smart-door-lock-slim"),
 
                 "Переход по ссылке некорректен");
 
@@ -132,9 +145,7 @@ public class AddToCartTest {
 
         // 1) Открываем карточку товара
 
-        WebElement productLink = driver.findElement(
-
-                By.cssSelector("h2.ProductItem__Title a"));
+        WebElement productLink = driver.findElement(By.xpath("//a[@href='/products/smart-door-lock-slim' and text()='Smart Door Lock Slim']"));
 
         productLink.click();
  
@@ -154,15 +165,12 @@ public class AddToCartTest {
  
         // 4) Проверяем, что в корзине тот самый товар
 
-        Assertions.assertEquals("Smart Door Lock",
-
-                cartItem.getText(),
-
-                "Название товара в корзине некорректно");
+        Assertions.assertEquals("smart door lock slim",
+         cartItem.getText().toLowerCase(), "Название товара в корзине некорректно");
  
         Assertions.assertTrue(cartItem.getAttribute("href")
 
-                .contains("/products/smart-door-lock"),
+                .contains("/products/smart-door-lock-slim"),
 
                 "href товара в корзине некорректен");
 
