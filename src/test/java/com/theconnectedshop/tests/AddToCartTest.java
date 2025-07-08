@@ -1,4 +1,6 @@
-package com.theconnectedshop;
+/*
+
+package com.theconnectedshop.test;
  
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -24,7 +26,7 @@ public class AddToCartTest {
  
     /* ===== Локаторы вынесены в константы ===== */
 
-    private static final By LOGO              = By.cssSelector("img[alt='The Connected Shop Logo White']");
+  /*  private static final By LOGO              = By.cssSelector("img[alt='The Connected Shop Logo White']");
 
     private static final By SEARCH_TOGGLE     = By.cssSelector("a[data-action='toggle-search']");
 
@@ -38,7 +40,7 @@ public class AddToCartTest {
  
     /* ===== Инициализация/завершение сессии ===== */
 
-    @BeforeAll
+  /*   @BeforeAll
 
     static void setUpClass() {
 
@@ -64,7 +66,7 @@ public class AddToCartTest {
  
     /* ===== Открываем главную страницу перед каждым тестом ===== */
 
-    @BeforeEach
+   /*  @BeforeEach
 
     void openHomePage() {
 
@@ -74,7 +76,7 @@ public class AddToCartTest {
  
     /* ===== Тесты ===== */
  
-    @Test
+   /*  @Test
 
     @DisplayName("01. Проверяем title и URL главной страницы")
 
@@ -179,5 +181,60 @@ public class AddToCartTest {
     }
 
 }
+ */
 
+ package com.theconnectedshop.tests;
  
+import com.theconnectedshop.config.BaseTest;
+import com.theconnectedshop.pages.HomePage;
+import com.theconnectedshop.pages.SearchResultsPage;
+import com.theconnectedshop.pages.ProductPage;
+ 
+import org.junit.jupiter.api.*;
+ 
+public class AddToCartTest extends BaseTest {
+ 
+    @Test
+    @DisplayName("01. Проверяем title и URL главной страницы")
+    void checkHomeTitleAndUrl() {
+        Assertions.assertEquals("The Connected Shop - Smart Locks, Smart Sensors, Smart Home & Office",
+                driver.getTitle(),
+                "Заголовок страницы некорректен");
+ 
+        Assertions.assertEquals("https://theconnectedshop.com/",
+                driver.getCurrentUrl(),
+                "URL страницы некорректен");
+    }
+ 
+    @Test
+    @DisplayName("02. Логотип в шапке отображается")
+    void checkHeaderLogo() {
+        HomePage homePage = new HomePage(driver);
+        Assertions.assertTrue(homePage.isLogoDisplayed(), "Логотип не виден");
+    }
+ 
+    @Test
+    @DisplayName("03-05. Поиск товара, проверка карточки и добавление в корзину")
+    void searchCheckProductAndAddToCart() {
+        HomePage homePage = new HomePage(driver);
+        SearchResultsPage searchPage = new SearchResultsPage(driver, wait);
+        ProductPage productPage = new ProductPage(driver, wait);
+ 
+        homePage.openSearch();
+        homePage.searchFor("smart door lock slim");
+ 
+        var productLink = searchPage.getProductLink();
+        Assertions.assertEquals("smart door lock slim", productLink.getText().toLowerCase(), "Название товара отличается");
+ 
+        searchPage.clickOnProduct();
+ 
+        Assertions.assertTrue(driver.getCurrentUrl().contains("/products/smart-door-lock-slim"), "Переход по ссылке некорректен");
+ 
+        productPage.addToCart();
+ 
+        var cartItem = productPage.getCartItem();
+ 
+        Assertions.assertEquals("smart door lock slim", cartItem.getText().toLowerCase(), "Название товара в корзине некорректно");
+        Assertions.assertTrue(cartItem.getAttribute("href").contains("/products/smart-door-lock-slim"), "href товара в корзине некорректен");
+    }
+}

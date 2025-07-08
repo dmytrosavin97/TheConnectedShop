@@ -1,1 +1,5 @@
-com\theconnectedshop\AddToCartTest.class
+com\theconnectedshop\pages\SearchResultsPage.class
+com\theconnectedshop\config\BaseTest.class
+com\theconnectedshop\pages\ProductPage.class
+com\theconnectedshop\tests\AddToCartTest.class
+com\theconnectedshop\pages\HomePage.class
